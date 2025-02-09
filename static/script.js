@@ -60,10 +60,13 @@ function updateFlag(element) {
 }
 
 // Initialize and update the exchange rate chart
-async function updateRateChart() {
+async function updateRateChart(period = '1D') {
     try {
         const fromCurrency = fromCurr.value;
         const toCurrency = toCurr.value;
+        
+        // Add period parameter to API call
+        const periodParam = period || '1D';
 
         // Show loading state
         document.querySelector('.chart-container').style.opacity = '0.5';
@@ -300,10 +303,30 @@ async function updateExchangeRate() {
     }
 }
 
+// Handle time period selection
+function handleTimePeriodClick(period) {
+    // Remove active class from all buttons
+    document.querySelectorAll('.time-period-selector .btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    // Add active class to clicked button
+    event.target.classList.add('active');
+    
+    // Update chart with new period
+    updateRateChart(period);
+}
+
 // Event Listeners
 form.addEventListener("submit", (evt) => {
     evt.preventDefault();
     updateExchangeRate();
+});
+
+// Add event listeners to time period buttons
+document.querySelectorAll('.time-period-selector .btn').forEach(button => {
+    button.addEventListener('click', (event) => {
+        handleTimePeriodClick(event.target.dataset.period);
+    });
 });
 
 // Initialize everything when the DOM is fully loaded
