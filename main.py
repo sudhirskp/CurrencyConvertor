@@ -48,25 +48,33 @@ def get_exchange_rate(from_currency, to_currency, amount):
 @app.route('/api/historical-rates/<from_currency>/<to_currency>')
 def get_historical_rates(from_currency, to_currency):
     try:
-        # Get rates for the last 7 days
         dates = []
         rates = []
-        current_date = datetime.now()
 
-        # ExchangeRate API provides daily historical data
-        response = requests.get(f"{API_BASE_URL}/latest/{from_currency}")
+        # Calculate date range (7 days)
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=7)
+
+        # Format dates for API
+        start_str = start_date.strftime('%Y-%m-%d')
+        end_str = end_date.strftime('%Y-%m-%d')
+
+        # Use the time-series endpoint
+        response = requests.get(
+            f"{API_BASE_URL}/timeseries/{from_currency}/{start_str}/{end_str}"
+        )
+
         if response.status_code != 200:
-            return jsonify({"error": "Failed to fetch exchange rates"}), 500
+            return jsonify({"error": "Failed to fetch historical rates"}), 500
 
         data = response.json()
-        if 'conversion_rates' not in data or to_currency not in data['conversion_rates']:
-            return jsonify({"error": "Invalid currency code"}), 400
 
-        rate = data['conversion_rates'][to_currency]
-
-        # Add current rate
-        dates.append(current_date.strftime('%Y-%m-%d'))
-        rates.append(rate)
+        # Process the time series data
+        for date in sorted(data.get('rates', {}).keys()):
+            daily_rates = data['rates'][date]
+            if to_currency in daily_rates:
+                dates.append(date)
+                rates.append(daily_rates[to_currency])
 
         return jsonify({
             "dates": dates,
