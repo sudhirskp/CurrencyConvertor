@@ -43,9 +43,15 @@ const updateFlag = (element) => {
         return;
     }
 
-    const flagImg = element.parentElement.querySelector("img");
+    // Find the closest parent dropdown div and then find the img within it
+    const dropdown = element.closest('.dropdown');
+    const flagImg = dropdown.querySelector('img');
+
     if (flagImg) {
         flagImg.src = `https://flagsapi.com/${countryCode}/flat/64.png`;
+        flagImg.alt = `${countryCode} flag`;
+    } else {
+        console.error("Flag image not found in the dropdown");
     }
 };
 
