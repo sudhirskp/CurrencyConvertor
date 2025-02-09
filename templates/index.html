@@ -55,6 +55,16 @@
         </form>
 
         <div class="chart-container mt-4">
+            <div class="time-period-selector mb-3">
+                <div class="btn-group" role="group" aria-label="Time period selector">
+                    <button type="button" class="btn btn-outline-secondary btn-sm active" data-period="1D">1D</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-period="5D">5D</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-period="1M">1M</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-period="3M">3M</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-period="YTD">YTD</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-period="1Y">1Y</button>
+                </div>
+            </div>
             <canvas id="rateChart"></canvas>
         </div>
     </div>

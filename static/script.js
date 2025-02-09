@@ -80,6 +80,10 @@ async function updateRateChart() {
 
         // Create new chart
         const ctx = document.getElementById('rateChart').getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(91, 192, 222, 0.3)');
+        gradient.addColorStop(1, 'rgba(91, 192, 222, 0)');
+
         rateChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -88,9 +92,10 @@ async function updateRateChart() {
                     label: `${fromCurrency} to ${toCurrency} Exchange Rate`,
                     data: data.rates,
                     borderColor: '#5bc0de',
-                    backgroundColor: 'rgba(91, 192, 222, 0.1)',
+                    backgroundColor: gradient,
                     borderWidth: 2,
-                    pointRadius: 4,
+                    pointRadius: 0,
+                    pointHoverRadius: 6,
                     pointBackgroundColor: '#5bc0de',
                     tension: 0.4,
                     fill: true
@@ -99,56 +104,94 @@ async function updateRateChart() {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
                 plugins: {
                     legend: {
-                        position: 'top',
-                        labels: {
-                            font: {
-                                size: 14
-                            }
-                        }
+                        display: false
                     },
                     title: {
                         display: true,
-                        text: 'Exchange Rate Trend (Last 7 Days)',
+                        text: 'Exchange Rate Trend',
+                        align: 'start',
                         font: {
                             size: 16,
-                            weight: 'bold'
-                        }
+                            weight: 'normal'
+                        },
+                        padding: {
+                            bottom: 30
+                        },
+                        color: '#e9ecef'
                     },
                     tooltip: {
                         mode: 'index',
                         intersect: false,
+                        backgroundColor: 'rgba(33, 37, 41, 0.9)',
+                        titleColor: '#e9ecef',
+                        bodyColor: '#e9ecef',
+                        padding: 12,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                let value = context.parsed.y;
+                                let prevValue = context.parsed.y;
+                                if (context.dataIndex > 0) {
+                                    prevValue = context.dataset.data[context.dataIndex - 1];
+                                }
+                                let change = ((value - prevValue) / prevValue * 100).toFixed(2);
+                                let sign = change > 0 ? '+' : '';
+                                return `${value.toFixed(4)} (${sign}${change}%)`;
+                            }
+                        }
                     }
                 },
                 scales: {
                     x: {
                         grid: {
-                            display: false
+                            display: false,
+                            drawBorder: false
                         },
                         ticks: {
-                            maxRotation: 45,
-                            minRotation: 45
+                            maxRotation: 0,
+                            color: '#6c757d',
+                            font: {
+                                size: 11
+                            }
                         }
                     },
                     y: {
-                        beginAtZero: false,
+                        position: 'right',
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            drawBorder: false
                         },
                         ticks: {
+                            color: '#6c757d',
+                            font: {
+                                size: 11
+                            },
                             callback: function(value) {
                                 return value.toFixed(4);
                             }
                         }
                     }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'index'
                 }
             }
         });
+
+        // Add percentage change to the graph title
+        const firstRate = data.rates[0];
+        const lastRate = data.rates[data.rates.length - 1];
+        const percentageChange = ((lastRate - firstRate) / firstRate * 100).toFixed(2);
+        const sign = percentageChange > 0 ? '+' : '';
+
+        rateChart.options.plugins.title.text = [
+            'Exchange Rate Trend',
+            `${sign}${percentageChange}%`
+        ];
+        rateChart.update();
     } catch (error) {
         console.error("Error updating rate chart:", error);
     }
