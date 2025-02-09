@@ -6,6 +6,7 @@
     <title>Currency Converter</title>
     <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
@@ -52,6 +53,10 @@
                 </div>
             </div>
         </form>
+
+        <div class="chart-container mt-4">
+            <canvas id="rateChart"></canvas>
+        </div>
     </div>
 
     <!-- Load scripts in the correct order -->
