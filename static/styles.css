@@ -19,11 +19,15 @@
 }
 
 .exchangerate {
-    font-size: 1.2rem;
-    font-weight: 500;
+    font-size: 1.4rem;
+    font-weight: 600;
     margin-top: 20px;
-    background-color: rgba(91, 192, 222, 0.1) !important;
-    border-color: rgba(91, 192, 222, 0.2) !important;
+    padding: 1rem;
+    background-color: rgba(91, 192, 222, 0.15) !important;
+    border-color: rgba(91, 192, 222, 0.3) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
 }
 
 .dropdown select {
