@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center my-4">Currency Converter</h2>
+        <form class="converter-form">
+            <div class="amount mb-4">
+                <label for="amount" class="form-label">Amount</label>
+                <input type="number" id="amount" class="form-control" value="1" min="1">
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="dropdown from">
+                        <label class="form-label">From</label>
+                        <div class="select-container">
+                            <img src="https://flagsapi.com/US/flat/64.png" alt="flag" class="flag-img">
+                            <select name="from" class="form-select"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="dropdown to">
+                        <label class="form-label">To</label>
+                        <div class="select-container">
+                            <img src="https://flagsapi.com/IN/flat/64.png" alt="flag" class="flag-img">
+                            <select name="to" class="form-select"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Get Exchange Rate</button>
+            </div>
+
+            <div class="mt-4">
+                <div class="alert alert-info exchangerate text-center" role="alert">
+                    Loading exchange rate...
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="countries.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
