@@ -102,25 +102,20 @@ async function updateRateChart(period = '1D') {
         gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
         rateChart = new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: data.dates,
                 datasets: [{
                     label: `${fromCurrency}/${toCurrency}`,
                     data: data.rates,
+                    backgroundColor: changeColor,
                     borderColor: changeColor,
-                    backgroundColor: gradient,
-                    borderWidth: 2,
-                    pointRadius: 0,
-                    pointHoverRadius: 6,
-                    pointStyle: 'circle',
-                    pointBorderColor: changeColor,
-                    pointBackgroundColor: '#fff',
-                    pointHoverBorderWidth: 2,
-                    pointHoverBackgroundColor: changeColor,
-                    pointHoverBorderColor: '#fff',
-                    tension: 0.1,
-                    fill: true
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    maxBarThickness: 15,
+                    minBarLength: 2,
+                    categoryPercentage: 0.9,
+                    barPercentage: 0.9
                 }]
             },
             options: {
