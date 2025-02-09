@@ -1,6 +1,3 @@
-const BASE_URL = "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies";
-
-// DOM Elements
 const dropdowns = document.querySelectorAll(".dropdown select");
 const btn = document.querySelector("form button");
 const fromCurr = document.querySelector(".from select");
@@ -70,27 +67,18 @@ async function updateExchangeRate() {
 
     try {
         msg.textContent = "Fetching exchange rate...";
+        const fromCurrency = fromCurr.value;
+        const toCurrency = toCurr.value;
 
-        const fromCurrency = fromCurr.value.toLowerCase();
-        const toCurrency = toCurr.value.toLowerCase();
-        const url = `${BASE_URL}/${fromCurrency}/${toCurrency}.json`;
-
-        console.log("Fetching exchange rate from:", url);
-        const response = await fetch(url);
-
+        // Call our backend API
+        const response = await fetch(`/api/exchange-rate/${fromCurrency}/${toCurrency}/${amountValue}`);
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to fetch exchange rate');
         }
 
         const data = await response.json();
-        const rate = data[toCurrency];
-
-        if (!rate) {
-            throw new Error("Invalid exchange rate received");
-        }
-
-        const finalAmount = (amountValue * rate).toFixed(2);
-        msg.textContent = `${amountValue} ${fromCurr.value} = ${finalAmount} ${toCurr.value}`;
+        msg.textContent = `${data.amount} ${data.from} = ${data.converted_amount} ${data.to}`;
     } catch (error) {
         console.error("Error updating exchange rate:", error);
         msg.textContent = "Error fetching exchange rate. Please try again.";
