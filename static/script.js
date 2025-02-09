@@ -103,23 +103,32 @@ async function updateRateChart() {
             data: {
                 labels: data.dates,
                 datasets: [{
-                    label: `${fromCurrency} to ${toCurrency} Exchange Rate`,
+                    label: `${fromCurrency}/${toCurrency}`,
                     data: data.rates,
                     borderColor: changeColor,
-                    backgroundColor: 'transparent',
-                    borderWidth: 3,
-                    pointRadius: 2,
-                    pointHoverRadius: 8,
+                    backgroundColor: gradient,
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    pointHoverRadius: 6,
+                    pointStyle: 'circle',
                     pointBorderColor: changeColor,
                     pointBackgroundColor: '#fff',
                     pointHoverBorderWidth: 2,
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: changeColor,
-                    tension: 0.4,
-                    fill: false
+                    pointHoverBackgroundColor: changeColor,
+                    pointHoverBorderColor: '#fff',
+                    tension: 0.1,
+                    fill: true
                 }]
             },
             options: {
+                layout: {
+                    padding: {
+                        right: 20
+                    }
+                },
+                animation: {
+                    duration: 0
+                },
                 responsive: true,
                 maintainAspectRatio: false,
                 interaction: {
@@ -182,15 +191,17 @@ async function updateRateChart() {
                 scales: {
                     x: {
                         grid: {
-                            display: false,
+                            color: 'rgba(255, 255, 255, 0.05)',
                             drawBorder: false
                         },
                         ticks: {
                             maxRotation: 0,
                             color: '#6c757d',
                             font: {
-                                size: 11
-                            }
+                                size: 10,
+                                family: 'monospace'
+                            },
+                            maxTicksLimit: 8
                         }
                     },
                     y: {
@@ -202,13 +213,19 @@ async function updateRateChart() {
                         ticks: {
                             color: '#6c757d',
                             font: {
-                                size: 11
+                                size: 10,
+                                family: 'monospace'
                             },
                             callback: function(value) {
                                 return value.toFixed(4);
-                            }
+                            },
+                            count: 8
                         }
                     }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
                 }
             }
         });

@@ -118,7 +118,26 @@
     color: #5bc0de;
 }
 
+.chart-container {
+    background: rgba(30, 34, 38, 0.95);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 canvas {
     width: 100% !important;
-    height: 100% !important;
+    height: 400px !important;
+    margin: 0 auto;
+}
+
+#quickCompare {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
 }
