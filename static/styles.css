@@ -19,15 +19,17 @@
 }
 
 .exchangerate {
-    font-size: 1.4rem;
-    font-weight: 600;
+    font-size: 1.8rem;
+    font-weight: 700;
     margin-top: 20px;
-    padding: 1rem;
-    background-color: rgba(91, 192, 222, 0.15) !important;
-    border-color: rgba(91, 192, 222, 0.3) !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
+    padding: 1.5rem;
+    background-color: rgba(91, 192, 222, 0.25) !important;
+    border: 2px solid rgba(91, 192, 222, 0.4) !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+    color: #e9ecef;
 }
 
 .dropdown select {
