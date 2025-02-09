@@ -22,7 +22,9 @@
                         <label class="form-label">From</label>
                         <div class="select-container">
                             <img src="https://flagsapi.com/US/flat/64.png" alt="US flag" class="flag-img">
-                            <select name="from" class="form-select"></select>
+                            <select name="from" class="form-select">
+                                <!-- Options will be added by JavaScript -->
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -32,7 +34,9 @@
                         <label class="form-label">To</label>
                         <div class="select-container">
                             <img src="https://flagsapi.com/IN/flat/64.png" alt="IN flag" class="flag-img">
-                            <select name="to" class="form-select"></select>
+                            <select name="to" class="form-select">
+                                <!-- Options will be added by JavaScript -->
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -50,6 +54,7 @@
         </form>
     </div>
 
+    <!-- Load scripts in the correct order -->
     <script src="countries.js"></script>
     <script src="script.js"></script>
 </body>

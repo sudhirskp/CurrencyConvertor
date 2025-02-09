@@ -9,7 +9,12 @@ const msg = document.querySelector(".exchangerate");
 const form = document.querySelector(".converter-form");
 
 // Initialize dropdowns with currency options
-const initializeDropdowns = () => {
+function initializeDropdowns() {
+    if (typeof countryList === 'undefined') {
+        console.error('countryList is not defined. Make sure countries.js is loaded.');
+        return;
+    }
+
     dropdowns.forEach(select => {
         for (const currCode in countryList) {
             const option = document.createElement("option");
@@ -31,10 +36,10 @@ const initializeDropdowns = () => {
             updateFlag(evt.target);
         });
     });
-};
+}
 
 // Update flag based on selected currency
-const updateFlag = (element) => {
+function updateFlag(element) {
     const currCode = element.value;
     const countryCode = countryList[currCode];
 
@@ -53,10 +58,10 @@ const updateFlag = (element) => {
     } else {
         console.error("Flag image not found in the dropdown");
     }
-};
+}
 
 // Fetch and calculate exchange rate
-const updateExchangeRate = async () => {
+async function updateExchangeRate() {
     const amount = document.querySelector("#amount");
     let amountValue = parseFloat(amount.value) || 1;
 
@@ -89,7 +94,7 @@ const updateExchangeRate = async () => {
         console.error("Error updating exchange rate:", error);
         msg.textContent = "Error fetching exchange rate. Please try again.";
     }
-};
+}
 
 // Event Listeners
 form.addEventListener("submit", (evt) => {
@@ -97,8 +102,9 @@ form.addEventListener("submit", (evt) => {
     updateExchangeRate();
 });
 
-// Initialize on page load
-window.addEventListener("load", () => {
+// Initialize everything when the DOM is fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("Initializing dropdowns...");
     initializeDropdowns();
     // Update flags for initial selected values
     updateFlag(fromCurr);
