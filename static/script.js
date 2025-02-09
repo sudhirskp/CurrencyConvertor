@@ -107,12 +107,15 @@ async function updateRateChart() {
                     data: data.rates,
                     borderColor: changeColor,
                     backgroundColor: gradient,
-                    borderWidth: 2,
+                    borderWidth: 2.5,
                     pointRadius: 0,
-                    pointHoverRadius: 6,
-                    pointBackgroundColor: changeColor,
-                    tension: 0.4,
-                    fill: true
+                    pointHoverRadius: 8,
+                    pointHoverBorderWidth: 2,
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: changeColor,
+                    tension: 0.3,
+                    fill: true,
+                    cubicInterpolationMode: 'monotone'
                 }]
             },
             options: {
@@ -120,7 +123,12 @@ async function updateRateChart() {
                 maintainAspectRatio: false,
                 interaction: {
                     intersect: false,
-                    mode: 'index'
+                    mode: 'index',
+                    axis: 'x'
+                },
+                animation: {
+                    duration: 750,
+                    easing: 'easeInOutQuart'
                 },
                 plugins: {
                     legend: {
