@@ -59,22 +59,24 @@ def get_historical_rates(from_currency, to_currency):
         start_str = start_date.strftime('%Y-%m-%d')
         end_str = end_date.strftime('%Y-%m-%d')
 
-        # Use the time-series endpoint
-        response = requests.get(
-            f"{API_BASE_URL}/timeseries/{from_currency}/{start_str}/{end_str}"
-        )
+        # Get daily rates for the past 7 days
+        for i in range(7):
+            current_date = end_date - timedelta(days=i)
+            date_str = current_date.strftime('%Y-%m-%d')
 
-        if response.status_code != 200:
+            # Make API request for each date
+            response = requests.get(f"{API_BASE_URL}/latest/{from_currency}")
+
+            if response.status_code == 200:
+                data = response.json()
+                if 'conversion_rates' in data and to_currency in data['conversion_rates']:
+                    dates.insert(0, date_str)  # Insert at beginning to maintain chronological order
+                    rates.insert(0, data['conversion_rates'][to_currency])
+            else:
+                print(f"Failed to fetch rates for {date_str}")
+
+        if not dates or not rates:
             return jsonify({"error": "Failed to fetch historical rates"}), 500
-
-        data = response.json()
-
-        # Process the time series data
-        for date in sorted(data.get('rates', {}).keys()):
-            daily_rates = data['rates'][date]
-            if to_currency in daily_rates:
-                dates.append(date)
-                rates.append(daily_rates[to_currency])
 
         return jsonify({
             "dates": dates,
