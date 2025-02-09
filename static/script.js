@@ -65,6 +65,9 @@ async function updateRateChart() {
         const fromCurrency = fromCurr.value;
         const toCurrency = toCurr.value;
 
+        // Show loading state
+        document.querySelector('.chart-container').style.opacity = '0.5';
+
         const response = await fetch(`/api/historical-rates/${fromCurrency}/${toCurrency}`);
         if (!response.ok) {
             const errorData = await response.json();
@@ -72,6 +75,17 @@ async function updateRateChart() {
         }
 
         const data = await response.json();
+        document.querySelector('.chart-container').style.opacity = '1';
+
+        // Calculate percentage change
+        const firstRate = data.rates[0];
+        const lastRate = data.rates[data.rates.length - 1];
+        const percentageChange = ((lastRate - firstRate) / firstRate * 100).toFixed(2);
+        const isPositive = percentageChange >= 0;
+        const changeColor = isPositive ? '#22c55e' : '#ef4444';
+
+        // Add quick compare section
+        updateQuickCompare(fromCurrency);
 
         // Destroy existing chart if it exists
         if (rateChart) {
@@ -81,8 +95,8 @@ async function updateRateChart() {
         // Create new chart
         const ctx = document.getElementById('rateChart').getContext('2d');
         const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, 'rgba(91, 192, 222, 0.3)');
-        gradient.addColorStop(1, 'rgba(91, 192, 222, 0)');
+        gradient.addColorStop(0, isPositive ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
         rateChart = new Chart(ctx, {
             type: 'line',
@@ -91,12 +105,12 @@ async function updateRateChart() {
                 datasets: [{
                     label: `${fromCurrency} to ${toCurrency} Exchange Rate`,
                     data: data.rates,
-                    borderColor: '#5bc0de',
+                    borderColor: changeColor,
                     backgroundColor: gradient,
                     borderWidth: 2,
                     pointRadius: 0,
                     pointHoverRadius: 6,
-                    pointBackgroundColor: '#5bc0de',
+                    pointBackgroundColor: changeColor,
                     tension: 0.4,
                     fill: true
                 }]
@@ -114,16 +128,22 @@ async function updateRateChart() {
                     },
                     title: {
                         display: true,
-                        text: 'Exchange Rate Trend',
+                        text: [
+                            `${fromCurrency}/${toCurrency}`,
+                            `${isPositive ? '+' : ''}${percentageChange}%`
+                        ],
                         align: 'start',
                         font: {
                             size: 16,
                             weight: 'normal'
                         },
+                        color: [
+                            '#e9ecef',
+                            changeColor
+                        ],
                         padding: {
                             bottom: 30
-                        },
-                        color: '#e9ecef'
+                        }
                     },
                     tooltip: {
                         mode: 'index',
@@ -142,7 +162,10 @@ async function updateRateChart() {
                                 }
                                 let change = ((value - prevValue) / prevValue * 100).toFixed(2);
                                 let sign = change > 0 ? '+' : '';
-                                return `${value.toFixed(4)} (${sign}${change}%)`;
+                                return [
+                                    `Rate: ${value.toFixed(4)}`,
+                                    `Change: ${sign}${change}%`
+                                ];
                             }
                         }
                     }
@@ -180,20 +203,44 @@ async function updateRateChart() {
                 }
             }
         });
-
-        // Add percentage change to the graph title
-        const firstRate = data.rates[0];
-        const lastRate = data.rates[data.rates.length - 1];
-        const percentageChange = ((lastRate - firstRate) / firstRate * 100).toFixed(2);
-        const sign = percentageChange > 0 ? '+' : '';
-
-        rateChart.options.plugins.title.text = [
-            'Exchange Rate Trend',
-            `${sign}${percentageChange}%`
-        ];
-        rateChart.update();
     } catch (error) {
         console.error("Error updating rate chart:", error);
+        document.querySelector('.chart-container').style.opacity = '1';
+    }
+}
+
+// Add quick compare functionality
+async function updateQuickCompare(baseCurrency) {
+    const compareContainer = document.getElementById('quickCompare');
+    const commonPairs = ['EUR', 'JPY', 'GBP', 'CAD'];
+
+    try {
+        const pairPromises = commonPairs.map(async (currency) => {
+            if (currency === baseCurrency) return null;
+            const response = await fetch(`/api/exchange-rate/${baseCurrency}/${currency}/1`);
+            if (!response.ok) return null;
+            const data = await response.json();
+            return { currency, rate: data.rate, change: ((data.rate - 1) * 100).toFixed(2) };
+        });
+
+        const pairs = (await Promise.all(pairPromises)).filter(pair => pair !== null);
+
+        const pairElements = pairs.map(pair => {
+            const isPositive = parseFloat(pair.change) >= 0;
+            return `
+                <div class="quick-compare-item">
+                    <div class="pair">${baseCurrency}${pair.currency}</div>
+                    <div class="rate">${pair.rate.toFixed(4)}</div>
+                    <div class="change ${isPositive ? 'positive' : 'negative'}">
+                        ${isPositive ? '+' : ''}${pair.change}%
+                    </div>
+                </div>
+            `;
+        });
+
+        compareContainer.innerHTML = pairElements.join('');
+    } catch (error) {
+        console.error("Error updating quick compare:", error);
     }
 }
 

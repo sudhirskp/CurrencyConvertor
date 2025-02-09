@@ -35,11 +35,49 @@
     margin: 0 auto;
     height: 400px;
     padding: 20px;
+    transition: opacity 0.3s ease;
 }
 
-canvas {
-    width: 100% !important;
-    height: 100% !important;
+.quick-compare {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: 1rem;
+    background: rgba(33, 37, 41, 0.5);
+    border-radius: 8px;
+}
+
+.quick-compare-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.quick-compare-item .pair {
+    font-weight: 500;
+    color: #e9ecef;
+}
+
+.quick-compare-item .rate {
+    text-align: right;
+    color: #e9ecef;
+}
+
+.quick-compare-item .change {
+    text-align: right;
+    font-weight: 500;
+}
+
+.quick-compare-item .change.positive {
+    color: #22c55e;
+}
+
+.quick-compare-item .change.negative {
+    color: #ef4444;
 }
 
 .time-period-selector {
@@ -68,4 +106,9 @@ canvas {
 .time-period-selector .btn:hover:not(.active) {
     background-color: rgba(91, 192, 222, 0.1);
     color: #5bc0de;
+}
+
+canvas {
+    width: 100% !important;
+    height: 100% !important;
 }
