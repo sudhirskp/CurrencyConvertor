@@ -106,16 +106,17 @@ async function updateRateChart() {
                     label: `${fromCurrency} to ${toCurrency} Exchange Rate`,
                     data: data.rates,
                     borderColor: changeColor,
-                    backgroundColor: gradient,
-                    borderWidth: 2.5,
-                    pointRadius: 0,
+                    backgroundColor: 'transparent',
+                    borderWidth: 3,
+                    pointRadius: 2,
                     pointHoverRadius: 8,
+                    pointBorderColor: changeColor,
+                    pointBackgroundColor: '#fff',
                     pointHoverBorderWidth: 2,
                     pointHoverBackgroundColor: '#fff',
                     pointHoverBorderColor: changeColor,
-                    tension: 0.3,
-                    fill: true,
-                    cubicInterpolationMode: 'monotone'
+                    tension: 0.4,
+                    fill: false
                 }]
             },
             options: {
