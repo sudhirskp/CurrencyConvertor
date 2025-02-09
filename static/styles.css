@@ -8,15 +8,22 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-bottom: 10px;
 }
 
 .flag-img {
     width: 32px;
     height: 32px;
     border-radius: 4px;
+    object-fit: cover;
 }
 
 .exchangerate {
     font-size: 1.2rem;
     font-weight: 500;
+    margin-top: 20px;
+}
+
+.dropdown select {
+    flex: 1;
 }

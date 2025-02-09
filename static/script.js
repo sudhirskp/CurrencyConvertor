@@ -19,7 +19,7 @@ function initializeDropdowns() {
         for (const currCode in countryList) {
             const option = document.createElement("option");
             option.value = currCode;
-            option.textContent = currCode;
+            option.textContent = `${currCode}`;
 
             // Set default selections
             if (select.name === "from" && currCode === "USD") {
@@ -34,6 +34,7 @@ function initializeDropdowns() {
         // Add change event listener
         select.addEventListener("change", (evt) => {
             updateFlag(evt.target);
+            updateExchangeRate();
         });
     });
 }
@@ -48,13 +49,10 @@ function updateFlag(element) {
         return;
     }
 
-    // Find the closest parent dropdown div and then find the img within it
-    const dropdown = element.closest('.dropdown');
-    const flagImg = dropdown.querySelector('img');
-
-    if (flagImg) {
-        flagImg.src = `https://flagsapi.com/${countryCode}/flat/64.png`;
-        flagImg.alt = `${countryCode} flag`;
+    const img = element.parentElement.querySelector("img");
+    if (img) {
+        img.src = `https://flagsapi.com/${countryCode}/flat/64.png`;
+        img.alt = `${countryCode} flag`;
     } else {
         console.error("Flag image not found in the dropdown");
     }
@@ -70,15 +68,18 @@ async function updateExchangeRate() {
         amount.value = 1;
     }
 
-    const fromCurrency = fromCurr.value.toLowerCase();
-    const toCurrency = toCurr.value.toLowerCase();
-
     try {
         msg.textContent = "Fetching exchange rate...";
 
-        const response = await fetch(`${BASE_URL}/${fromCurrency}/${toCurrency}.json`);
+        const fromCurrency = fromCurr.value.toLowerCase();
+        const toCurrency = toCurr.value.toLowerCase();
+        const url = `${BASE_URL}/${fromCurrency}/${toCurrency}.json`;
+
+        console.log("Fetching exchange rate from:", url);
+        const response = await fetch(url);
+
         if (!response.ok) {
-            throw new Error("Failed to fetch exchange rate");
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
@@ -104,10 +105,8 @@ form.addEventListener("submit", (evt) => {
 
 // Initialize everything when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Initializing dropdowns...");
+    console.log("Initializing currency converter...");
     initializeDropdowns();
-    // Update flags for initial selected values
-    updateFlag(fromCurr);
-    updateFlag(toCurr);
+    // Update exchange rate for initial values
     updateExchangeRate();
 });
