@@ -78,6 +78,11 @@ async function updateRateChart(period = '1D') {
         }
 
         const data = await response.json();
+        
+        // Ensure data exists and has required properties
+        if (!data || !data.rates || !data.dates || data.rates.length === 0) {
+            throw new Error('Invalid data received from server');
+        }
         document.querySelector('.chart-container').style.opacity = '1';
 
         // Calculate percentage change
