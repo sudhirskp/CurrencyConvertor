@@ -64,165 +64,87 @@ async function updateRateChart(period = '1D') {
     try {
         const fromCurrency = fromCurr.value;
         const toCurrency = toCurr.value;
-        
-        // Add period parameter to API call
-        const periodParam = period || '1D';
 
-        // Show loading state
         document.querySelector('.chart-container').style.opacity = '0.5';
 
         const response = await fetch(`/api/historical-rates/${fromCurrency}/${toCurrency}`);
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to fetch historical rates');
-        }
-
         const data = await response.json();
-        
-        // Ensure data exists and has required properties
-        if (!data || !data.rates || !data.dates || data.rates.length === 0) {
-            throw new Error('Invalid data received from server');
-        }
+
+        if (!response.ok) throw new Error(data.error || 'Failed to fetch rates');
+        if (!data.rates || !data.dates) throw new Error('Invalid data format');
+
         document.querySelector('.chart-container').style.opacity = '1';
 
-        // Calculate percentage change
-        const firstRate = data.rates[0];
-        const lastRate = data.rates[data.rates.length - 1];
-        const percentageChange = ((lastRate - firstRate) / firstRate * 100).toFixed(2);
-        const isPositive = percentageChange >= 0;
-        const changeColor = isPositive ? '#22c55e' : '#ef4444';
+        // Destroy existing chart
+        if (rateChart) rateChart.destroy();
 
-        // Add quick compare section
-        updateQuickCompare(fromCurrency);
-
-        // Destroy existing chart if it exists
-        if (rateChart) {
-            rateChart.destroy();
-        }
-
-        // Create new chart
         const ctx = document.getElementById('rateChart').getContext('2d');
+        
+        // Create gradient
         const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, isPositive ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)');
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        gradient.addColorStop(0, 'rgba(91, 192, 222, 0.2)');
+        gradient.addColorStop(1, 'rgba(91, 192, 222, 0)');
 
         rateChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: data.dates,
                 datasets: [{
-                    label: `${fromCurrency}/${toCurrency} Exchange Rate`,
+                    label: `Exchange Rate`,
                     data: data.rates,
-                    backgroundColor: 'rgba(91, 192, 222, 0.2)',
+                    backgroundColor: gradient,
                     borderColor: '#5bc0de',
                     borderWidth: 2,
                     fill: true,
                     tension: 0.4,
-                    pointRadius: 4,
-                    pointHoverRadius: 6
+                    pointRadius: 4
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                animation: {
-                    duration: 750,
-                    easing: 'easeInOutQuart'
-                },
                 plugins: {
                     legend: {
                         display: false
                     },
-                    title: {
-                        display: true,
-                        text: [
-                            `${fromCurrency}/${toCurrency}`,
-                            `${isPositive ? '+' : ''}${percentageChange}%`
-                        ],
-                        align: 'start',
-                        font: {
-                            size: 16,
-                            weight: 'normal'
-                        },
-                        color: [
-                            '#e9ecef',
-                            changeColor
-                        ],
-                        padding: {
-                            bottom: 30
-                        }
-                    },
                     tooltip: {
-                        mode: 'index',
-                        intersect: false,
                         backgroundColor: 'rgba(33, 37, 41, 0.9)',
-                        titleColor: '#e9ecef',
-                        bodyColor: '#e9ecef',
-                        padding: 12,
-                        displayColors: false,
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
                         callbacks: {
                             label: function(context) {
-                                let value = context.parsed.y;
-                                let prevValue = context.parsed.y;
-                                if (context.dataIndex > 0) {
-                                    prevValue = context.dataset.data[context.dataIndex - 1];
-                                }
-                                let change = ((value - prevValue) / prevValue * 100).toFixed(2);
-                                let sign = change > 0 ? '+' : '';
-                                return [
-                                    `Rate: ${value.toFixed(4)}`,
-                                    `Change: ${sign}${change}%`
-                                ];
+                                return `Rate: ${context.parsed.y.toFixed(4)}`;
                             }
                         }
                     }
                 },
                 scales: {
                     x: {
-                        type: 'time',
-                        time: {
-                            unit: 'day',
-                            displayFormats: {
-                                day: 'MMM D'
-                            }
-                        },
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
-                            drawBorder: false
+                            color: 'rgba(255, 255, 255, 0.05)'
                         },
                         ticks: {
-                            maxRotation: 45,
-                            color: '#6c757d',
-                            font: {
-                                size: 10,
-                                family: 'monospace'
-                            }
+                            color: '#6c757d'
                         }
                     },
                     y: {
-                        position: 'right',
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
-                            drawBorder: false
+                            color: 'rgba(255, 255, 255, 0.05)'
                         },
                         ticks: {
                             color: '#6c757d',
-                            font: {
-                                size: 10,
-                                family: 'monospace'
-                            },
                             callback: function(value) {
                                 return value.toFixed(4);
                             }
                         }
                     }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'index'
                 }
             }
         });
+
+        // Update quick compare
+        updateQuickCompare(fromCurrency);
+        
     } catch (error) {
         console.error("Error updating rate chart:", error);
         document.querySelector('.chart-container').style.opacity = '1';
