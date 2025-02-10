@@ -64,7 +64,7 @@ async function updateRateChart(period = '1D') {
     try {
         const fromCurrency = fromCurr.value;
         const toCurrency = toCurr.value;
-
+        
         // Add period parameter to API call
         const periodParam = period || '1D';
 
@@ -102,16 +102,14 @@ async function updateRateChart(period = '1D') {
         gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
         rateChart = new Chart(ctx, {
-            type: 'line', // Changed to line chart
+            type: 'pie',
             data: {
                 labels: data.dates,
                 datasets: [{
                     data: data.rates,
-                    backgroundColor: gradient, // Use gradient for background
-                    borderColor: '#22c55e', // Changed border color
-                    borderWidth: 2,
-                    fill: true, // Fill area under the line
-                    tension: 0.4 // Smoother line
+                    backgroundColor: data.rates.map(() => `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.8)`),
+                    borderColor: '#fff',
+                    borderWidth: 1
                 }]
             },
             options: {
@@ -155,12 +153,15 @@ async function updateRateChart(period = '1D') {
                         callbacks: {
                             label: function(context) {
                                 let value = context.parsed.y;
-                                let firstValue = context.dataset.data[0];
-                                let totalChange = ((value - firstValue) / firstValue * 100).toFixed(2);
-                                let sign = totalChange > 0 ? '+' : '';
+                                let prevValue = context.parsed.y;
+                                if (context.dataIndex > 0) {
+                                    prevValue = context.dataset.data[context.dataIndex - 1];
+                                }
+                                let change = ((value - prevValue) / prevValue * 100).toFixed(2);
+                                let sign = change > 0 ? '+' : '';
                                 return [
                                     `Rate: ${value.toFixed(4)}`,
-                                    `Growth: ${sign}${totalChange}% from start`
+                                    `Change: ${sign}${change}%`
                                 ];
                             }
                         }
@@ -286,7 +287,7 @@ function handleTimePeriodClick(period) {
     });
     // Add active class to clicked button
     event.target.classList.add('active');
-
+    
     // Update chart with new period
     updateRateChart(period);
 }
