@@ -104,10 +104,10 @@ async function updateRateChart(period = '1D') {
         rateChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: data.dates,
+                labels: data.dates || [],
                 datasets: [{
                     label: `${fromCurrency}/${toCurrency} Exchange Rate`,
-                    data: data.rates,
+                    data: data.rates || [],
                     backgroundColor: 'rgba(91, 192, 222, 0.2)',
                     borderColor: '#5bc0de',
                     borderWidth: 2,
@@ -118,6 +118,8 @@ async function updateRateChart(period = '1D') {
                 }]
             },
             options: {
+                maintainAspectRatio: false,
+                responsive: true,
                 responsive: true,
                 maintainAspectRatio: false,
                 animation: {
