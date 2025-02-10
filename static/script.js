@@ -321,10 +321,11 @@ document.querySelectorAll('.time-period-selector .btn').forEach(button => {
 });
 
 // Initialize everything when the DOM is fully loaded
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     console.log("Initializing currency converter...");
     initializeDropdowns();
-    // Update exchange rate and chart for initial values
-    updateExchangeRate();
-    updateRateChart();
+    await updateExchangeRate();
+    await updateRateChart('1D');
+    // Set 1D as active by default
+    document.querySelector('[data-period="1D"]').classList.add('active');
 });
