@@ -102,14 +102,19 @@ async function updateRateChart(period = '1D') {
         gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
         rateChart = new Chart(ctx, {
-            type: 'pie',
+            type: 'line',
             data: {
                 labels: data.dates,
                 datasets: [{
+                    label: `${fromCurrency}/${toCurrency} Exchange Rate`,
                     data: data.rates,
-                    backgroundColor: data.rates.map(() => `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.8)`),
-                    borderColor: '#fff',
-                    borderWidth: 1
+                    backgroundColor: 'rgba(91, 192, 222, 0.2)',
+                    borderColor: '#5bc0de',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
                 }]
             },
             options: {
@@ -169,18 +174,24 @@ async function updateRateChart(period = '1D') {
                 },
                 scales: {
                     x: {
+                        type: 'time',
+                        time: {
+                            unit: 'day',
+                            displayFormats: {
+                                day: 'MMM D'
+                            }
+                        },
                         grid: {
                             color: 'rgba(255, 255, 255, 0.05)',
                             drawBorder: false
                         },
                         ticks: {
-                            maxRotation: 0,
+                            maxRotation: 45,
                             color: '#6c757d',
                             font: {
                                 size: 10,
                                 family: 'monospace'
-                            },
-                            maxTicksLimit: 8
+                            }
                         }
                     },
                     y: {
@@ -197,8 +208,7 @@ async function updateRateChart(period = '1D') {
                             },
                             callback: function(value) {
                                 return value.toFixed(4);
-                            },
-                            count: 8
+                            }
                         }
                     }
                 },
