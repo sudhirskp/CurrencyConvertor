@@ -3,7 +3,7 @@
 
 A Flask web application that provides real-time currency exchange rates and historical rate charts using the ExchangeRate API.
 
-![Currency Converter Screenshot](screenshots/app-screenshot.png)
+![Currency Converter Screenshot](Screenshot 2025-03-08 205915.png)
 
 ## Features
 
