@@ -1,12 +1,13 @@
-Here's an updated README for your Currency Convertor project:
-
----
-
 # Currency Convertor
 
 A web application that provides real-time currency exchange rates and historical rate charts using the ExchangeRate API.
 
-![Currency Convertor Screenshot](Screenshot 2025-03-08 205915.png)
+![Currency Convertor Screenshot](currency)
+
+
+
+![Currency Convertor Screenshot](chart)
+
 
 ## Features
 
