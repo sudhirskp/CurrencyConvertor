@@ -1,9 +1,12 @@
+Here's an updated README for your Currency Convertor project:
 
-# Currency Exchange Rate Tracker
+---
 
-A Flask web application that provides real-time currency exchange rates and historical rate charts using the ExchangeRate API.
+# Currency Convertor
 
-![Currency Converter Screenshot](Screenshot 2025-03-08 205915.png)
+A web application that provides real-time currency exchange rates and historical rate charts using the ExchangeRate API.
+
+![Currency Convertor Screenshot](Screenshot 2025-03-08 205915.png)
 
 ## Features
 
@@ -15,28 +18,38 @@ A Flask web application that provides real-time currency exchange rates and hist
 
 ## Setup Instructions
 
-1. Clone this repository to your machine
+1. Clone this repository to your machine:
+    ```bash
+    git clone https://github.com/sudhirskp/CurrencyConvertor.git
+    ```
+
 2. Get an API key from [ExchangeRate API](https://www.exchangerate-api.com/)
+
 3. Set up your API key:
-   ```bash
-   export EXCHANGERATE_API_KEY=your_api_key_here
-   ```
+    ```bash
+    export EXCHANGERATE_API_KEY=your_api_key_here
+    ```
+
 4. Install required packages:
-   ```bash
-   pip install flask requests
-   ```
+    ```bash
+    pip install flask requests
+    ```
+
 5. Run the application:
-   ```bash
-   python main.py
-   ```
+    ```bash
+    python main.py
+    ```
+
 6. Open your browser and go to `http://0.0.0.0:5000`
 
 ## Technologies Used
 
-- Python/Flask
-- JavaScript/Chart.js
+- JavaScript
+- HTML
+- Python (Flask)
+- CSS
+- Nix
 - ExchangeRate API
-- HTML/CSS
 
 ## API Endpoints
 
@@ -49,4 +62,8 @@ Make sure to keep your API key secure and never commit it to version control.
 
 ## Demo
 
-You can try out the live demo on Replit [here](https://replit.com/@YourUsername/CurrencyConverter)
+You can try out the live demo on Replit [here](https://replit.com/@sudhirskp/CurrencyConverter)
+
+---
+
+Feel free to adjust any part of this draft to better fit your project.
